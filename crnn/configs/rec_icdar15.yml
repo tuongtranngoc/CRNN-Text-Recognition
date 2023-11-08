@@ -3,6 +3,9 @@ Train:
     name: cidar15
     data_dir: dataset/icdar15
     label_file_list: ["./datasets/icdar15/rec_gt_train.txt"]
+    transforms:
+      - RecResizeImg:
+          image_shape: [3, 32, 100]
 
   loader:
     shuffle: True
@@ -15,6 +18,9 @@ Eval:
   name: cidar15
   data_dir: dataset/icdar15
   label_file_list: ["./datasets/icdar15/rec_gt_test.txt"]
+  transforms:
+    - RecResizeImg:
+        image_shape: [3, 32, 100]
 
   loader:
     shuffle: False

@@ -1,0 +1,30 @@
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
+import torch
+import torch.nn as nn
+
+from backbone import mobilenetv3_extractor
+from neck import NeckCRNN
+from head import HeadCRNN
+
+
+class CRNN(nn.Module):
+    def __init__(self, **kwargs) -> None:
+        super(CRNN, self).__init__()
+        self.feat_extract = mobilenetv3_extractor()
+        self.neck = NeckCRNN(288)
+        self.head = HeadCRNN(96, 37)
+
+    def forward(self, x):
+        x = self.feat_extract(x)
+        import pdb;pdb.set_trace()
+        x = self.neck(x)
+        x = self.head(x)
+        return x
+    
+if __name__ == "__main__":
+    crnn = CRNN()
+    x = torch.rand((1, 3, 32, 320))
+    y = crnn(x)
