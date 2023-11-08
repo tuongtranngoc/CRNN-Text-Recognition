@@ -1,7 +1,7 @@
 Train:
   dataset:
     name: cidar15
-    data_dir: dataset/icdar15
+    data_dir: dataset/icdar15/train
     label_file_list: ["./datasets/icdar15/rec_gt_train.txt"]
     transforms:
       - RecResizeImg:
@@ -16,7 +16,7 @@ Train:
 Eval:
   dataset:
   name: cidar15
-  data_dir: dataset/icdar15
+  data_dir: dataset/icdar15/test
   label_file_list: ["./datasets/icdar15/rec_gt_test.txt"]
   transforms:
     - RecResizeImg:

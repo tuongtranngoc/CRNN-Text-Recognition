@@ -5,9 +5,9 @@ from __future__ import absolute_import
 import torch
 import torch.nn as nn
 
-from backbone import mobilenetv3_extractor
-from neck import NeckCRNN
-from head import HeadCRNN
+from .backbone import mobilenetv3_extractor
+from .neck import NeckCRNN
+from .head import HeadCRNN
 
 
 class CRNN(nn.Module):
@@ -23,8 +23,3 @@ class CRNN(nn.Module):
         x = self.neck(x)
         x = self.head(x)
         return x
-    
-if __name__ == "__main__":
-    crnn = CRNN()
-    x = torch.rand((1, 3, 32, 320))
-    y = crnn(x)
