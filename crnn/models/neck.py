@@ -1,0 +1,43 @@
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+
+import torch
+import torch.nn as nn
+
+
+class Im2Seq(nn.Module):
+    def __init__(self, in_channels, **kwargs) -> None:
+        super().__init__()
+        self.out_channels = in_channels
+
+    def forward(self, x):
+        B, C, H, W = x.shape
+        assert H == 1
+        x = x.squeeze(axis=2)
+        x = x.transpose([0, 2, 1]) # NWC
+        return x
+    
+
+class EncoderRNN(nn.Module):
+    def __init__(self, in_channels, hidden_size) -> None:
+        super(EncoderRNN, self).__init__()
+        self.out_channels = hidden_size * 2
+        self.bilstm = nn.LSTM(in_channels, hidden_size, direction='bidirectional', num_layers=2)
+
+    def forward(self, x):
+        x, __ = self.bilstm(x)
+        return x
+
+
+class NeckCRNN(nn.Module):
+    def __init__(self, in_channels, hidden_size=48, **kwargs) -> None:
+        super(NeckCRNN, self).__init__()
+        self.im2seq = Im2Seq(in_channels)
+        self.encoder = EncoderRNN(self.im2seq.out_channels, hidden_size)
+        self.out_channels = self.encoder.out_channels
+
+    def forward(self, x):
+        x = self.im2seq(x)
+        x = self.encoder(x)
+        return x

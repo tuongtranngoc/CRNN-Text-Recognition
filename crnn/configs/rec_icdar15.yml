@@ -1,0 +1,23 @@
+Train:
+  dataset:
+    name: cidar15
+    data_dir: dataset/icdar15
+    label_file_list: ["./datasets/icdar15/rec_gt_train.txt"]
+
+  loader:
+    shuffle: True
+    batch_size: 64
+    num_workers: 8
+    use_shared_memory: False
+
+Eval:
+  dataset:
+  name: cidar15
+  data_dir: dataset/icdar15
+  label_file_list: ["./datasets/icdar15/rec_gt_test.txt"]
+
+  loader:
+    shuffle: False
+    batch_size: 64
+    num_workers: 4
+    use_shared_memory: False

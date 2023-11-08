@@ -1,0 +1,4 @@
+datasets/icdar15
+**/__pycache__/
+crnn/weights/*
+crnn/exps/*
