@@ -34,7 +34,7 @@ class Icdar15Dataset(nn.Module):
             image = self.augment.augment(image)
         image = self.augment.transform(image)
         return image, label
-
+    
     def __len__(self):
         return len(self.dataset)
     

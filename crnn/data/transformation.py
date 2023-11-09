@@ -11,6 +11,7 @@ from . import cfg
 import cv2
 import math
 
+
 class TransformCRNN(object):
     def __init__(self) -> None:
         self.image_size = cfg['Train']['dataset']['transforms']['image_shape']
