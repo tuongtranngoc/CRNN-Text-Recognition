@@ -19,7 +19,6 @@ class CRNN(nn.Module):
 
     def forward(self, x):
         x = self.feat_extract(x)
-        import pdb;pdb.set_trace()
         x = self.neck(x)
         x = self.head(x)
         return x
