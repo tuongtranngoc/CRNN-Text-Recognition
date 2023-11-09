@@ -2,6 +2,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+from crnn.models.crnn import CRNN
+from crnn.utils.logger import Logger
+from crnn.utils.losses import CTCLoss
+from crnn.utils.metrics import BatchMeter
+from crnn.data.dataset_ic15 import Icdar15Dataset
+from crnn.data.transformation import TransformCRNN
+
 import yaml
 import os
 

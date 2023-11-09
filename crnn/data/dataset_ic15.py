@@ -9,22 +9,24 @@ import torch.nn as nn
 
 from . import *
 
-class Icdar15Dataset(nn.Module):
-    def __init__(self, rec_type='Train'):
+from torch.utils.data import Dataset
+
+class Icdar15Dataset(Dataset):
+    def __init__(self, mode='Train'):
         self.dataset = self.load_dataset()
         self.augment = TransformCRNN()
-        self.rec_type = rec_type
+        self.mode = mode
 
     def load_dataset(self):
         dataset = []
-        label_file_list = cfg[self.rec_type]['dataset']['label_file_list']
+        label_file_list = cfg[self.mode]['dataset']['label_file_list']
         for label_file in label_file_list:
             with open(label_file, 'r', encoding='utf-8') as f_label:
                 label_lines = f_label.readlines()
                 for line in label_lines:
                     pth_img, text = line.strip().split('\t')
                     pth_img = os.path.basename(pth_img)
-                    pth_img = os.path.join(cfg[self.rec_type]['dataset']['data_dir'], pth_img)
+                    pth_img = os.path.join(cfg[self.mode]['dataset']['data_dir'], pth_img)
                     dataset.append([pth_img, text])
         return dataset
     
@@ -34,13 +36,13 @@ class Icdar15Dataset(nn.Module):
             image = self.augment.augment(image)
         image = self.augment.transform(image)
         return image, label
-    
+
     def __len__(self):
         return len(self.dataset)
     
     def __getitem__(self, index):
         img_pth, label = self.dataset[index]
-        image, label = self.get_image_label(img_pth, label, is_aug=cfg[self.rec_type]['dataset']['transforms']['augmentation'])
+        image, label = self.get_image_label(img_pth, label, is_aug=cfg[self.mode]['dataset']['transforms']['augmentation'])
         return image, label
 
 
