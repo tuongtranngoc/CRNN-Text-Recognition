@@ -7,6 +7,8 @@ from torch.utils.data import DataLoader
 
 from . import *
 
+import argparse
+
 logger = Logger.get_logger("__TRAINING__")
 
 
@@ -29,7 +31,7 @@ class Trainer(object):
         self.model = CRNN().to(self.args.device)
         self.loss_func = CTCLoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr, amsgrad=True)
-
+    
 
     def train(self):
         for epoch in range(self.start_epoch, self.args.epochs):
@@ -39,7 +41,8 @@ class Trainer(object):
                 images = images.to(self.args.device)
                 labels = labels.to(self.args.device)
                 out = self.model(images)
-            
+                import pdb; pdb.set_trace()
+    
     def save_ckpt(self, save_path, best_acc, epoch):
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         ckpt_dict = {
@@ -58,3 +61,17 @@ class Trainer(object):
         self.model.load_state_dict(ckpt['mode'])
 
         return start_epoch
+    
+
+def cli():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--batch_size", default=config['Train']['loader']['batch_size'])
+    parser.add_argument("--shuffle", default=config['Train']['loader']['shuffle'])
+    parser.add_argument("--num_workers", default=config['Train']['loader']['num_workers'])
+    parser.add_argument("--pin_memory", default=config['Train']['loader']['use_shared_memory'])
+
+
+if __name__ == "__main__":
+    args = cli()
+    trainer = Trainer(args)
+    trainer.train()

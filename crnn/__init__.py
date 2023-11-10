@@ -12,6 +12,7 @@ from crnn.data.transformation import TransformCRNN
 import yaml
 import os
 
+
 def load_config(file_path='crnn/configs/rec_icdar15.yml'):
     """
     Load config from yml/yaml file.
