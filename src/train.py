@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from src.models.crnn import CRNN
@@ -10,8 +11,8 @@ from src.utils.logger import Logger
 from src.utils.losses import CTCLoss
 from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
-from src.data.dataset_ic15 import Icdar15Dataset
 from src.data.transformation import TransformCRNN
+from src.data.dataset_ic15 import Icdar15Dataset, icdar15_collate_fn
 
 from . import config as cfg
 
@@ -36,23 +37,29 @@ class Trainer(object):
                                        batch_size=self.args.batch_size, 
                                        shuffle=self.args.shuffle,
                                        num_workers=self.args.num_workers,
-                                       pin_memory=self.args.pin_memory)
+                                       pin_memory=self.args.pin_memory,
+                                       collate_fn=icdar15_collate_fn)
     
     def create_model(self):
         self.model = CRNN().to(self.args.device)
-        # self.loss_func = CTCLoss()
+        self.loss_func = CTCLoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr, amsgrad=True)
     
 
     def train(self):
         for epoch in range(self.start_epoch, self.args.epochs):
             mt_loss = BatchMeter()
-            for bz, (images, labels) in enumerate(self.train_loader):
+            for i, (images, labels, labels_len) in enumerate(self.train_loader):
                 self.model.train()
-                import pdb; pdb.set_trace()
+                bz = images.size(0)
                 images = DataUtils.to_device(images)
                 labels = DataUtils.to_device(labels)
                 out = self.model(images)
+                out_log_probs = F.log_softmax(out, dim=2)
+                labels_len = labels_len.flatten()
+                images_len = torch.tensor([out.size(0)] * bz, dtype=torch.long)
+
+                loss = self.loss_func(out_log_probs, labels, images_len, labels_len)
     
     def save_ckpt(self, save_path, best_acc, epoch):
         os.makedirs(os.path.dirname(save_path), exist_ok=True)

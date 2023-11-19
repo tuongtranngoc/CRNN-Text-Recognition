@@ -15,7 +15,7 @@ class Im2Seq(nn.Module):
         B, C, H, W = x.shape
         assert H == 1
         x = x.squeeze(axis=2)
-        x = x.permute((0, 2, 1)) # NWC
+        x = x.permute(2, 0, 1) # WNC
         return x
     
 

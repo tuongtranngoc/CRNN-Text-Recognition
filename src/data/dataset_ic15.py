@@ -59,11 +59,18 @@ class Icdar15Dataset(Dataset):
     def __getitem__(self, index):
         img_pth, label = self.dataset[index]
         image, label = self.get_image_label(img_pth, label, is_aug=cfg[self.mode]['dataset']['transforms']['augmentation'])
-        label_len = [len(label)]
+        label = torch.tensor(label, dtype=torch.long)
+        label_len = torch.tensor([len(label)], dtype=torch.long)
         return image, label, label_len
     
-    def icdar15_collate_fn(self, batch):
-        pass
+
+def icdar15_collate_fn(batch):
+    images, labels, label_len = zip(*batch)
+    images = torch.stack(images, dim=0)
+    labels = torch.cat(labels, dim=0)
+    label_len = torch.cat(label_len, dim=0)
+    return images, labels, label_len
+
 
 
 if __name__ == "__main__":
