@@ -37,5 +37,6 @@ Eval:
     use_shared_memory: False
 
 Debug:
-  transforms: 'debugs/transformation'
+  transforms: debugs/transformation
   log_file: 'logs/crnn.log'
+  tensorboard: debugs/tensorboard

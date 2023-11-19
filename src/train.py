@@ -56,18 +56,20 @@ class Trainer(object):
                 labels = DataUtils.to_device(labels)
                 out = self.model(images)
                 out_log_probs = F.log_softmax(out, dim=2)
-                labels_len = labels_len.flatten()
+                labels_len = torch.flatten(labels_len)
                 images_len = torch.tensor([out.size(0)] * bz, dtype=torch.long)
 
                 loss = self.loss_func(out_log_probs, labels, images_len, labels_len)
-
+                
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
 
                 mt_loss.update(loss.item())
-                print(f"Epoch {epoch} - batch {i+1}/{len(self.train_dataset)} loss: {mt_loss.get_value('mean')}", end='\r')
+                print(f"Epoch {epoch} - batch {i+1}/{len(self.train_dataset)} - loss: {mt_loss.get_value()}", end='\r')
+            logger.info(f"Epoch {epoch} - loss: {mt_loss.get_value('mean')}")
     
+
     def save_ckpt(self, save_path, best_acc, epoch):
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         ckpt_dict = {
