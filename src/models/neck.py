@@ -31,7 +31,7 @@ class EncoderRNN(nn.Module):
 
 
 class NeckCRNN(nn.Module):
-    def __init__(self, in_channels, hidden_size=48, **kwargs) -> None:
+    def __init__(self, in_channels, hidden_size=96, **kwargs) -> None:
         super(NeckCRNN, self).__init__()
         self.im2seq = Im2Seq(in_channels)
         self.encoder = EncoderRNN(self.im2seq.out_channels, hidden_size)
