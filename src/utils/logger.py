@@ -12,7 +12,7 @@ from . import cfg
 
 class Logger:
     FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    LOG_FILE = cfg.debug.log_file
+    LOG_FILE = cfg['Debug']['log_file']
     os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 
     @classmethod

@@ -1,3 +1,10 @@
+Global:
+  device: cuda
+  character_dict_path: ./datasets/icdar15/ic15_dict.txt
+
+Optimizer:
+  lr: 0.0005
+
 Train:
   dataset:
     name: cidar15
@@ -8,6 +15,7 @@ Train:
       augmentation: True
 
   loader:
+    epochs: 100
     shuffle: True
     batch_size: 64
     num_workers: 8
@@ -30,3 +38,4 @@ Eval:
 
 Debug:
   transforms: 'debugs/transformation'
+  log_file: 'logs/crnn.log'
