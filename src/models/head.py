@@ -10,7 +10,7 @@ class HeadCRNN(nn.Module):
         super(HeadCRNN, self).__init__()
         self.fc = nn.Linear(in_channels, out_channels)
         self.out_channels = out_channels
-
+    
     def forward(self, x):
         x = self.fc(x)
         return x

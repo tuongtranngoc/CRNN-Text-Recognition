@@ -3,13 +3,14 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 import cv2
-from . import *
 import numpy as np
 from typing import Tuple, List
 
 import torch
 import torchvision
     
+from . import *
+
 
 class DataUtils:
     @classmethod

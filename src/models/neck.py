@@ -10,12 +10,14 @@ class Im2Seq(nn.Module):
     def __init__(self, in_channels, **kwargs) -> None:
         super().__init__()
         self.out_channels = in_channels
-
+    
     def forward(self, x):
-        B, C, H, W = x.shape
+        __, __, H, ___ = x.shape
+        # Mentioned in Paper: It is unconstrained to the lengths of sequence-like objects,
+        # requiring only height normalization in both training and testing phases
         assert H == 1
         x = x.squeeze(axis=2)
-        x = x.permute(2, 0, 1) # WNC
+        x = x.permute(2, 0, 1) # NCW -> WNC before inputing to LSTM (input shape: WNC)
         return x
     
 

@@ -8,6 +8,9 @@ import torch.nn as nn
 
 
 def mobilenetv3_extractor():
+    """Feature extraction
+        Reference: https://pytorch.org/vision/main/models/generated/torchvision.models.mobilenet_v3_small.html
+    """
     backbone = torchvision.models.mobilenet_v3_small(weights=torchvision.models.MobileNet_V3_Small_Weights.IMAGENET1K_V1)
     features = backbone.features[:-4]
     features.extend([
