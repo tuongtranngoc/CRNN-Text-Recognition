@@ -15,9 +15,7 @@ By default, when we use Pytorch data loading utility `torch.utils.data.DataLoade
 
 ## How to use `collate_fn`
 
-Here is simple snippet to demonstrate how to write a custom `collate_fn` for a text recognition problem with icdar15 dataset:
-+ Shape of input images: (3, 32, 320)
-+ Shape of input label: various lengths with each input image, i.e, (image1, 'ABCD'), (image2, 'DEFK12232'), ... 
+This example provides a simple custom collate_fn for a text recognition problem using the icdar15 dataset. Input images have a shape of (3, 32, 320), and input labels have varying lengths associated with each input image, such as (image1, 'ABCD'), (image2, 'DEFK12232'), and so on.
 
 ```python
 from __future__ import division
