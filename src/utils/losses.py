@@ -11,6 +11,11 @@ class CTCLoss(nn.Module):
         self.loss_func = nn.CTCLoss(blank=0, reduction='none', zero_infinity=True)
 
     def forward(self, log_probs, targets, pred_lenghts, target_lenghts):
+        """ log_probs: (T, N, C)
+            targets: sum(target_lengths)
+            pred_lenghts: N - batch size
+            target_lenghts: N - batch size
+        """
         loss = self.loss_func(log_probs, targets, pred_lenghts, target_lenghts)
         return loss.mean()
     

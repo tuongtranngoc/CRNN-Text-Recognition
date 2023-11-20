@@ -6,10 +6,14 @@ import os
 import cv2
 import torch
 import torch.nn as nn
+from torch.utils.data import Dataset
 
 from . import *
 
-from torch.utils.data import Dataset
+from tqdm import tqdm
+
+logger = Logger.get_logger("DATASET")
+
 
 class Icdar15Dataset(Dataset):
     def __init__(self, mode='Train'):
@@ -35,7 +39,8 @@ class Icdar15Dataset(Dataset):
     def load_dataset(self):
         dataset = []
         label_file_list = cfg[self.mode]['dataset']['label_file_list']
-        for label_file in label_file_list:
+        logger.info(f"Loaing dataset for {self.mode} ...")
+        for label_file in tqdm(label_file_list):
             with open(label_file, 'r', encoding='utf-8') as f_label:
                 label_lines = f_label.readlines()
                 for line in label_lines:
@@ -62,7 +67,7 @@ class Icdar15Dataset(Dataset):
         label = torch.tensor(label, dtype=torch.long)
         label_len = torch.tensor([len(label)], dtype=torch.long)
         return image, label, label_len
-    
+
 
 def icdar15_collate_fn(batch):
     images, labels, label_len = zip(*batch)
@@ -70,7 +75,6 @@ def icdar15_collate_fn(batch):
     labels = torch.cat(labels, dim=0)
     label_len = torch.cat(label_len, dim=0)
     return images, labels, label_len
-
 
 
 if __name__ == "__main__":

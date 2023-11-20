@@ -19,7 +19,7 @@ from . import config as cfg
 import os
 import argparse
 
-logger = Logger.get_logger("__TRAINING__")
+logger = Logger.get_logger("TRAINING")
 
 
 class Trainer(object):
@@ -38,7 +38,7 @@ class Trainer(object):
                                        shuffle=self.args.shuffle,
                                        num_workers=self.args.num_workers,
                                        pin_memory=self.args.pin_memory,
-                                       collate_fn=icdar15_collate_fn)
+                                       collate_fn=icdar15_collate_fn) # Add custom collate_fn to dataloader
     
     def create_model(self):
         self.model = CRNN().to(self.args.device)
@@ -64,9 +64,9 @@ class Trainer(object):
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
-
+                
                 mt_loss.update(loss.item())
-                print(f"Epoch {epoch} - batch {i+1}/{len(self.train_dataset)} - loss: {mt_loss.get_value()}", end='\r')
+                print(f"Epoch {epoch} - batch {i+1}/{len(self.train_loader)} - loss: {mt_loss.get_value()}", end='\r')
             logger.info(f"Epoch {epoch} - loss: {mt_loss.get_value('mean')}")
     
 
