@@ -16,7 +16,7 @@ from src.utils.logger import Logger
 from src.utils.losses import CTCLoss
 from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
-from src.data.dataset_ic15 import icdar15_collate_fn
+from src.data.dataset_lmdb import lmdb_collate_fn
 
 logger = Logger.get_logger("EVALUATION")
 
@@ -33,7 +33,7 @@ class Evaluation(object):
                                       shuffle=self.args.shuffle,
                                       num_workers=self.args.num_workers,
                                       pin_memory=self.args.pin_memory,
-                                      collate_fn=icdar15_collate_fn)
+                                      collate_fn=lmdb_collate_fn)
         
     def evaluate(self):
         metrics = {
@@ -51,11 +51,11 @@ class Evaluation(object):
                 log_probs = F.log_softmax(out, dim=2)
                 labels_len = torch.flatten(labels_len)
                 images_len = torch.tensor([out.size(0)] * bz, dtype=torch.long)
-
+                
                 loss = self.loss_func(log_probs, labels, images_len, labels_len)
 
                 log_probs = log_probs.cpu().detach().numpy()
-                labels = labels.cpu().detach().numpy()
+                labels = labels.cpu().detach().numpy().tolist()
                 
                 preds = best_path_decode(log_probs)
                 acc = self.compute_acc(preds, labels, labels_len)
@@ -71,17 +71,14 @@ class Evaluation(object):
         all_num = 0
         new_labels = []
         i = 0
-
         for char_len in labels_len:
             new_labels.append(labels[i: i+char_len])
             i += char_len
-
         for (pred), (target) in zip(preds, new_labels):
             pred = ''.join([self.id2char[int(c)] for c in pred])
             target = ''.join([self.id2char[int(c)] for c in target])
             pred = pred.replace(" ", "")
             target = target.replace(" ", "")
-
             if pred == target:
                 correct_num += 1
             all_num += 1

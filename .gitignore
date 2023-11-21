@@ -1,7 +1,5 @@
-datasets/icdar15
+datasets/*
 **/__pycache__/
-crnn/weights/*
-crnn/exps/*
 debugs/*
 logs/*
 weights/*

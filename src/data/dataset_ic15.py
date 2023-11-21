@@ -45,7 +45,7 @@ class Icdar15Dataset(Dataset):
                 label_lines = f_label.readlines()
                 for line in tqdm(label_lines):
                     pth_img, text = line.strip('\n').split('\t')
-                    text2ids = [self.char2id[c] for c in text]
+                    text2ids = [self.char2id[c.lower()] for c in text if c.lower() in self.char2id]
                     pth_img = os.path.basename(pth_img)
                     pth_img = os.path.join(cfg[self.mode]['dataset']['data_dir'], pth_img)
                     dataset.append([pth_img, text2ids])

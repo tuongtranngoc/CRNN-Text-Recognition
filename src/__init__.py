@@ -7,7 +7,7 @@ import yaml
 import os
 
 
-def load_config(file_path='src/configs/rec_icdar15.yml'):
+def load_config(file_path='src/configs/rec_lmdb.yml'):
     """
     Load config from yml/yaml file.
     Args:

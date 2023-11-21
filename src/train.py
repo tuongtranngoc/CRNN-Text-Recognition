@@ -13,7 +13,7 @@ from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
 from src.utils.tensorboard import Tensorboard
 from src.data.transformation import TransformCRNN
-from src.data.dataset_ic15 import Icdar15Dataset, icdar15_collate_fn
+from src.data.dataset_lmdb import LMDBDataSet, lmdb_collate_fn
 
 from . import config as cfg
 from src.eval import Evaluation
@@ -34,19 +34,19 @@ class Trainer(object):
         self.eval = Evaluation(self.valid_dataset, self.model)
     
     def create_data_loader(self):
-        self.train_dataset = Icdar15Dataset(mode='Train')
-        self.valid_dataset = Icdar15Dataset(mode='Eval')
+        self.train_dataset = LMDBDataSet(mode='Train')
+        self.valid_dataset = LMDBDataSet(mode='Eval')
         self.train_loader = DataLoader(self.train_dataset, 
                                        batch_size=self.args.batch_size, 
                                        shuffle=self.args.shuffle,
                                        num_workers=self.args.num_workers,
                                        pin_memory=self.args.pin_memory,
-                                       collate_fn=icdar15_collate_fn) # Add custom collate_fn to dataloader
+                                       collate_fn=lmdb_collate_fn) # Add custom collate_fn to dataloader
     
     def create_model(self):
-        self.model = CRNN().to(self.args.device)
+        self.model = CRNN(self.train_dataset.num_classes).to(self.args.device)
         self.loss_func = CTCLoss()
-        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr, amsgrad=True)
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.args.lr)
 
         if self.args.resume:
             logger.info("Resuming training ...")
@@ -92,7 +92,7 @@ class Trainer(object):
                     self.best_acc = current_acc
                     best_ckpt_path = self.args.best_ckpt_pth
                     self.save_ckpt(best_ckpt_path, self.best_acc, epoch)
-
+            
             # Save last checkpoint
             last_ckpt_path = self.args.last_ckpt_pth
             self.save_ckpt(last_ckpt_path, self.best_acc, epoch)
