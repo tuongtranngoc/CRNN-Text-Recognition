@@ -8,7 +8,7 @@ By default, when we use Pytorch data loading utility `torch.utils.data.DataLoade
     + It preserves the data structure, e.g., if each sample is a dictionary, it outputs a dictionary with the same set of keys but batched Tensors as values (or lists if the values can not be converted into Tensors). Same for list s, tuple s, namedtuple s, etc.
 
 <p align='center'>
-    <image src='images/default_collate_fn.jpg'>
+    <image src='/images/default_collate_fn.jpg'>
 </p>
 
 + Customized `collate_fn`, users may use it to achive custom batching, e.g, collating along a dimension other than the first, padding sequences of various lengths, or adding support for data types.
