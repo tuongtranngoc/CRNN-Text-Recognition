@@ -4,7 +4,7 @@ Global:
   character_dict_path: ./datasets/icdar15/ic15_dict.txt
 
 Optimizer:
-  lr: 0.0001
+  lr: 0.0005
 
 Train:
   dataset:
