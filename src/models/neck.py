@@ -38,7 +38,7 @@ class NeckCRNN(nn.Module):
         self.im2seq = Im2Seq(in_channels)
         self.encoder = EncoderRNN(self.im2seq.out_channels, hidden_size)
         self.out_channels = self.encoder.out_channels
-
+    
     def forward(self, x):
         x = self.im2seq(x)
         x = self.encoder(x)

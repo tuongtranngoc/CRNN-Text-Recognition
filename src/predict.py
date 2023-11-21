@@ -20,8 +20,8 @@ from src.data.transformation import TransformCRNN
 class Predictor:
     def __init__(self, args) -> None:
         self.args = args
-        self.dataset = LMDBDataSet('Eval')
-        self.model = CRNN(self.dataset.num_classes)
+        __, self.id2char = self.map_char2id()
+        self.model = CRNN(len(self.id2char)+1)
         self.model.load_state_dict(torch.load(self.args.model_path, map_location=self.args.device)['model'])
         self.model.to(self.args.device)
         self.transform = TransformCRNN()
@@ -30,11 +30,23 @@ class Predictor:
         if os.path.exists(self.args.img_path):
             img = cv2.imread(self.args.img_path)
             img = self.transform.transform(img)
-            img = torch.tensor(img)
             img = img.unsqueeze(0)
             return img
         else:
             Exception("Not exist image path")
+    
+    def map_char2id(self):
+        dict_char2id = {}
+        dict_id2char = {}
+        with open(cfg['Global']['character_dict_path'],'r', encoding='utf-8') as f_dict:
+            char_list = f_dict.readlines()
+            for i, char in enumerate(char_list):
+                char = char.strip('\n')
+                if char not in dict_char2id:
+                    dict_char2id[char] = i + 1
+                    dict_id2char[i + 1] = char
+        f_dict.close()
+        return dict_char2id, dict_id2char
     
     def post_process(self, labels, blank=0):
         mapped_labels = []
@@ -53,14 +65,14 @@ class Predictor:
         labels = np.argmax(log_prob[0], axis=-1)
         labels = self.post_process(labels)
         return labels
-    
+
     def predict(self):
         with torch.no_grad():
             img = self.preprocess()
             out = self.model(img.to(self.args.device))
             log_prob = F.log_softmax(out, dim=2)
         decoded_id = self.post_decode(log_prob)
-        decoded_text = ''.join([self.dataset.id2char[_id] for _id in decoded_id])
+        decoded_text = ''.join([self.id2char[_id] for _id in decoded_id])
         print(decoded_text)
         return decoded_text
 

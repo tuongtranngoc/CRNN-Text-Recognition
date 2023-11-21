@@ -14,14 +14,14 @@ Train:
     transforms:
       image_shape: [3, 32, 100]
       augmentation: True
-
+  
   loader:
-    epochs: 250
-    eval_step: 2
+    epochs: 150
+    eval_step: 5
     shuffle: True
     batch_size: 2048
     num_workers: 8
-    use_shared_memory: False
+    use_shared_memory: True
 
   checkpoint:
     last_path: weights/last.pth

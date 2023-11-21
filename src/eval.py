@@ -53,7 +53,7 @@ class Evaluation(object):
                 images_len = torch.tensor([out.size(0)] * bz, dtype=torch.long)
                 
                 loss = self.loss_func(log_probs, labels, images_len, labels_len)
-
+                
                 log_probs = log_probs.cpu().detach().numpy()
                 labels = labels.cpu().detach().numpy().tolist()
                 

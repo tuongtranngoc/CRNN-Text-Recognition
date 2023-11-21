@@ -46,7 +46,7 @@ class Trainer(object):
     def create_model(self):
         self.model = CRNN(self.train_dataset.num_classes).to(self.args.device)
         self.loss_func = CTCLoss()
-        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.args.lr)
+        self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
 
         if self.args.resume:
             logger.info("Resuming training ...")

@@ -30,8 +30,8 @@ class Icdar15Dataset(Dataset):
             for i, char in enumerate(char_list):
                 char = char.strip('\n')
                 if char not in dict_char2id:
-                    dict_char2id[char] = i
-                    dict_id2char[i] = char
+                    dict_char2id[char] = i + 1
+                    dict_id2char[i + 1] = char
         f_dict.close()
         return dict_char2id, dict_id2char
 

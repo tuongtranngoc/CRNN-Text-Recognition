@@ -24,7 +24,7 @@ class TransformCRNN(object):
             A.SafeRotate(limit=[-10, 10], p=0.3),
             A.Blur(p=0.3),
             A.RandomBrightnessContrast(p=0.3),
-            A.MedianBlur(p=0.1, blur_limit=15),
+            A.MedianBlur(p=0.1, blur_limit=5),
             A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=20, val_shift_limit=20, p=0.3)
         ])
 
