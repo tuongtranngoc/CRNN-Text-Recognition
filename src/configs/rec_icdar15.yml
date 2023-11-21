@@ -1,9 +1,10 @@
 Global:
   device: cuda
+  resume_training: False
   character_dict_path: ./datasets/icdar15/ic15_dict.txt
 
 Optimizer:
-  lr: 0.0005
+  lr: 0.0001
 
 Train:
   dataset:
@@ -16,10 +17,15 @@ Train:
 
   loader:
     epochs: 100
+    eval_step: 1
     shuffle: True
-    batch_size: 64
+    batch_size: 512
     num_workers: 8
     use_shared_memory: False
+
+  checkpoint:
+    last_path: weights/last.pth
+    best_path: weights/best.pth
 
 Eval:
   dataset:
@@ -32,7 +38,7 @@ Eval:
 
   loader:
     shuffle: False
-    batch_size: 64
+    batch_size: 256
     num_workers: 4
     use_shared_memory: False
 

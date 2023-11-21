@@ -3,3 +3,5 @@ datasets/icdar15
 crnn/weights/*
 crnn/exps/*
 debugs/*
+logs/*
+weights/*

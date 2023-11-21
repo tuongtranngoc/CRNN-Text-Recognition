@@ -72,6 +72,6 @@ train_loader = DataLoader(self.train_dataset,
                         collate_fn=icdar15_collate_fn) # Add custom collate_fn to dataloader
 ```
 
-## References
+## Reference
 + https://discuss.pytorch.org/t/how-to-create-a-dataloader-with-variable-size-input/8278/3?u=ptrblck
 + https://pytorch.org/docs/stable/data.html#dataloader-collate-fn

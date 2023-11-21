@@ -40,10 +40,10 @@ class Icdar15Dataset(Dataset):
         dataset = []
         label_file_list = cfg[self.mode]['dataset']['label_file_list']
         logger.info(f"Loaing dataset for {self.mode} ...")
-        for label_file in tqdm(label_file_list):
+        for label_file in label_file_list:
             with open(label_file, 'r', encoding='utf-8') as f_label:
                 label_lines = f_label.readlines()
-                for line in label_lines:
+                for line in tqdm(label_lines):
                     pth_img, text = line.strip('\n').split('\t')
                     text2ids = [self.char2id[c] for c in text]
                     pth_img = os.path.basename(pth_img)
