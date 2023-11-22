@@ -11,13 +11,17 @@ def mobilenetv3_extractor():
     """Feature extraction
         Reference: https://pytorch.org/vision/main/models/generated/torchvision.models.mobilenet_v3_small.html
     """
-    backbone = torchvision.models.mobilenet_v3_small(weights=torchvision.models.MobileNet_V3_Small_Weights.IMAGENET1K_V1)
+    backbone = torchvision.models.mobilenet_v3_large(weights=torchvision.models.MobileNet_V3_Large_Weights.IMAGENET1K_V1)
     features = backbone.features[:-4]
     features.extend([
-        nn.Conv2d(in_channels=48, out_channels=144, kernel_size=1),
-        nn.Conv2d(in_channels=144, out_channels=288, kernel_size=1),
-        nn.BatchNorm2d(288),
+        nn.Conv2d(in_channels=112, out_channels=160, kernel_size=1),
+        nn.Conv2d(in_channels=160, out_channels=512, kernel_size=1),
+        nn.BatchNorm2d(512),
         nn.Hardswish(inplace=True),
         nn.MaxPool2d(kernel_size=(2, 1))
     ])
     return nn.Sequential(*features)
+
+
+# from torchsummary import summary
+# summary(features, (3, 32, 100))

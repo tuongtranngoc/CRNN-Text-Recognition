@@ -17,13 +17,14 @@ Train:
   
   loader:
     epochs: 150
-    eval_step: 5
+    eval_step: 1
     shuffle: True
     batch_size: 2048
     num_workers: 8
     use_shared_memory: True
 
   checkpoint:
+    save_dir: weights
     last_path: weights/last.pth
     best_path: weights/best.pth
 

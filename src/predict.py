@@ -13,7 +13,6 @@ import torch.nn.functional as F
 
 from . import config as cfg
 from src.models.crnn import CRNN
-from src.data.dataset_lmdb import LMDBDataSet
 from src.data.transformation import TransformCRNN
 
 
@@ -58,7 +57,7 @@ class Predictor:
                 prev_label = l
         mapped_labels = [l for l in mapped_labels if l != blank]
         return mapped_labels
-
+    
     def post_decode(self, log_probs):
         log_prob = log_probs.cpu().detach().numpy()
         log_prob = log_prob.transpose((1, 0, 2))
@@ -79,7 +78,7 @@ class Predictor:
 def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("--img_path", type=str, default=None, help="Path to image file")
-    parser.add_argument("--model_path", type=str, default=cfg['Train']['checkpoint']['best_path'], help="Path to model checkpoint")
+    parser.add_argument("--model_path", type=str, default=cfg['Train']['checkpoint']['last_path'], help="Path to model checkpoint")
     parser.add_argument("--device", type=str, default='cuda', help="device inference (cuda or cpu)")
 
     args = parser.parse_args()

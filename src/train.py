@@ -42,7 +42,7 @@ class Trainer(object):
                                        num_workers=self.args.num_workers,
                                        pin_memory=self.args.pin_memory,
                                        collate_fn=lmdb_collate_fn) # Add custom collate_fn to dataloader
-    
+        
     def create_model(self):
         self.model = CRNN(self.train_dataset.num_classes).to(self.args.device)
         self.loss_func = CTCLoss()

@@ -14,7 +14,7 @@ class CRNN(nn.Module):
     def __init__(self, num_classes=37,**kwargs) -> None:
         super(CRNN, self).__init__()
         self.feat_extract = mobilenetv3_extractor()
-        self.neck = NeckCRNN(288)
+        self.neck = NeckCRNN(512)
         self.head = HeadCRNN(192, num_classes)
 
     def forward(self, x):

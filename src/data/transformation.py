@@ -21,7 +21,7 @@ class TransformCRNN(object):
             ToTensorV2()])
         # image augmentation
         self.__augment = A.Compose([
-            A.SafeRotate(limit=[-10, 10], p=0.3),
+            A.SafeRotate(limit=[-5, 5], p=0.3),
             A.Blur(p=0.3),
             A.RandomBrightnessContrast(p=0.3),
             A.MedianBlur(p=0.1, blur_limit=5),
