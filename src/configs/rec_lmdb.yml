@@ -19,7 +19,7 @@ Train:
     epochs: 150
     eval_step: 1
     shuffle: True
-    batch_size: 2048
+    batch_size: 1028
     num_workers: 8
     use_shared_memory: True
 

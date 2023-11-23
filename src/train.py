@@ -44,7 +44,7 @@ class Trainer(object):
                                        collate_fn=lmdb_collate_fn) # Add custom collate_fn to dataloader
         
     def create_model(self):
-        self.model = CRNN(self.train_dataset.num_classes).to(self.args.device)
+        self.model = CRNN(num_classes=self.train_dataset.num_classes).to(self.args.device)
         self.loss_func = CTCLoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
 

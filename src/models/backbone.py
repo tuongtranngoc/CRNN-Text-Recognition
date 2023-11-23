@@ -7,21 +7,32 @@ import torchvision
 import torch.nn as nn
 
 
-def mobilenetv3_extractor():
-    """Feature extraction
-        Reference: https://pytorch.org/vision/main/models/generated/torchvision.models.mobilenet_v3_small.html
-    """
-    backbone = torchvision.models.mobilenet_v3_large(weights=torchvision.models.MobileNet_V3_Large_Weights.IMAGENET1K_V1)
-    features = backbone.features[:-4]
-    features.extend([
-        nn.Conv2d(in_channels=112, out_channels=160, kernel_size=1),
-        nn.Conv2d(in_channels=160, out_channels=512, kernel_size=1),
-        nn.BatchNorm2d(512),
-        nn.Hardswish(inplace=True),
-        nn.MaxPool2d(kernel_size=(2, 1))
-    ])
-    return nn.Sequential(*features)
+def features_sequence_extractor():
+    backbone = nn.Sequential(
+            nn.Conv2d(3, 64, (3, 3), (1, 1), (1, 1), bias=True),
+            nn.ReLU(True),
+            nn.MaxPool2d((2, 2), (2, 2)),  # image size: 16 * 64
+            
+            nn.Conv2d(64, 128, (3, 3), (1, 1), (1, 1), bias=True),
+            nn.ReLU(True),
+            nn.MaxPool2d((2, 2), (2, 2)),  # image size: 8 * 32
 
+            nn.Conv2d(128, 256, (3, 3), (1, 1), (1, 1), bias=False),
+            nn.BatchNorm2d(256),
+            nn.ReLU(True),
+            nn.Conv2d(256, 256, (3, 3), (1, 1), (1, 1), bias=True),
+            nn.ReLU(True),
+            nn.MaxPool2d((2, 2), (2, 1), (0, 1)),  # image size: 4 x 16
 
-# from torchsummary import summary
-# summary(features, (3, 32, 100))
+            nn.Conv2d(256, 512, (3, 3), (1, 1), (1, 1), bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
+            nn.Conv2d(512, 512, (3, 3), (1, 1), (1, 1), bias=True),
+            nn.ReLU(True),
+            nn.MaxPool2d((2, 2), (2, 1), (0, 1)),  # image size: 2 x 16
+
+            nn.Conv2d(512, 512, (2, 2), (1, 1), (0, 0), bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),  # image size: 1 x 16
+        )
+    return backbone

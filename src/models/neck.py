@@ -13,7 +13,7 @@ class Im2Seq(nn.Module):
     
     def forward(self, x):
         __, __, H, ___ = x.shape
-        # Mentioned in Paper: It is unconstrained to the lengths of sequence-like objects,
+        # Mentioned in paper: It is unconstrained to the lengths of sequence-like objects,
         # requiring only height normalization in both training and testing phases
         assert H == 1
         x = x.squeeze(axis=2)
@@ -33,7 +33,7 @@ class EncoderRNN(nn.Module):
 
 
 class NeckCRNN(nn.Module):
-    def __init__(self, in_channels, hidden_size=96, **kwargs) -> None:
+    def __init__(self, in_channels, hidden_size=256, **kwargs) -> None:
         super(NeckCRNN, self).__init__()
         self.im2seq = Im2Seq(in_channels)
         self.encoder = EncoderRNN(self.im2seq.out_channels, hidden_size)
