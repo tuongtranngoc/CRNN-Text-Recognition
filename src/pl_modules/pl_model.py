@@ -16,7 +16,8 @@ from . import *
 class LitCRNN(pl.LightningModule):
     def __init__(self) -> None:
         super().__init__()
-        self.num_classes = cfg['Global']['num_classes']
+        self.id2char = id2char()
+        self.num_classes = len(self.id2char)
         self.model = CRNN(self.num_classes)
         self.loss_func = CTCLoss()
         self.best_acc = 0.0
@@ -67,7 +68,7 @@ class LitCRNN(pl.LightningModule):
             self.best_acc = current_acc
         
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
+        optimizer = torch.optim.AdamW(self.model.parameters(), lr=cfg['Optimizer']['lr'])
         return [optimizer]
 
     def on_train_end(self):

@@ -21,7 +21,6 @@ def main():
     seed_everything(96, workers=True)
     
     trainer = Trainer(
-        gpus=1,
         max_epochs=100,
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
