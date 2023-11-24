@@ -16,7 +16,8 @@ pip install -r requirements.txt
 
 ## Data Preparation
 You can download and use [ICDAR2015]() or [MJSynth]() dataset for training model. 
-After, 
+
+After that,
 + Put the data folder under the `datasets` directory
 + Setup config file for each dataset in `src/__init__.py`: replace `CFG_PATH` augument by `src/config/rec_lmdb.yml` or `src/config/rec_icdar15.yml`
 
@@ -38,9 +39,20 @@ python -m src.eval
 ```bash
 python -m src.predict --img_path <path_to_image_file>
 ```
+Example:
+
+<p>
+    <image src="images/tuongan.png">
+</p>
+
+```bash
+python -m src.predict --img_path images/tuongan.png
+>> tuongan
+```
+
+
 ## Experiments
 
 | Dataset | Acc| Epoch|
 |---|---|---|
-| MJSynth| | |
-| Icdar2015| | |
+| MJSynth| 0.95 | 20 |

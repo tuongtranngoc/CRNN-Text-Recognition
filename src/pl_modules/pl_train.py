@@ -11,7 +11,7 @@ from pytorch_lightning import Trainer, seed_everything
 
 from . import *
 
-from .pl_dataset import LMDBDataModule
+from .pl_dataset import ICDAR15DataModule, LMDBDataModule
 from .pl_model import LitCRNN
 
 
@@ -21,7 +21,7 @@ def main():
     seed_everything(96, workers=True)
     
     trainer = Trainer(
-        max_epochs=100,
+        max_epochs=30,
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
         enable_progress_bar=True,

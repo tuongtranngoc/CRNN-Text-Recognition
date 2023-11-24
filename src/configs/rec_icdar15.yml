@@ -16,7 +16,7 @@ Train:
       augmentation: True
 
   loader:
-    epochs: 100
+    epochs: 20
     eval_step: 1
     shuffle: True
     batch_size: 512

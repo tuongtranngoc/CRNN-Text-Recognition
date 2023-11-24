@@ -19,26 +19,13 @@ logger = Logger.get_logger("DATASET")
 class LMDBDataSet(Dataset):
     def __init__(self, mode):
         super(LMDBDataSet, self).__init__()
-        self.char2id, self.id2char = self.map_char2id()
+        self.char2id, self.id2char = map_char2id()
         self.num_classes = len(self.char2id) + 1
         logger.info(f"Preparing dataset for {mode}")
         self.lmdb_sets = self.load_hierarchical_lmdb_dataset(cfg[mode]['dataset']['data_dir'])
         self.data_idx_order_list = self.dataset_traversal()
         self.augment = TransformCRNN()
         self.is_aug = cfg[mode]['dataset']['transforms']['augmentation']
-
-    def map_char2id(self):
-        dict_char2id = {}
-        dict_id2char = {}
-        with open(cfg['Global']['character_dict_path'],'r', encoding='utf-8') as f_dict:
-            char_list = f_dict.readlines()
-            for i, char in enumerate(char_list):
-                char = char.strip('\n')
-                if char not in dict_char2id:
-                    dict_char2id[char] = i + 1
-                    dict_id2char[i + 1] = char
-        f_dict.close()
-        return dict_char2id, dict_id2char
 
     def load_hierarchical_lmdb_dataset(self, data_dir):
         lmdb_sets = {}

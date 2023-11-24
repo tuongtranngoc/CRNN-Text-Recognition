@@ -12,7 +12,6 @@ from src.utils.losses import CTCLoss
 from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
 from src.utils.tensorboard import Tensorboard
-from src.data.transformation import TransformCRNN
 from src.data.dataset_lmdb import LMDBDataSet, lmdb_collate_fn
 
 from . import config as cfg
@@ -32,7 +31,7 @@ class Trainer(object):
         self.create_data_loader()
         self.create_model()
         self.eval = Evaluation(self.valid_dataset, self.model)
-    
+        
     def create_data_loader(self):
         self.train_dataset = LMDBDataSet(mode='Train')
         self.valid_dataset = LMDBDataSet(mode='Eval')
