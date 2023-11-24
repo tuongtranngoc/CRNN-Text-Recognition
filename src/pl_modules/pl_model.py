@@ -68,7 +68,7 @@ class LitCRNN(pl.LightningModule):
             self.best_acc = current_acc
         
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.model.parameters(), lr=cfg['Optimizer']['lr'])
+        optimizer = torch.optim.AdamW(self.model.parameters(), lr=cfg['Optimizer']['lr'], amsgrad=True)
         return [optimizer]
 
     def on_train_end(self):

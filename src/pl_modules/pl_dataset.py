@@ -41,7 +41,7 @@ class LMDBDataModule(pl.LightningDataModule):
     
     def val_dataloader(self) -> EVAL_DATALOADERS:
         return DataLoader(self.valid_dataset,
-                          shuffle=cfg['Train']['loader']['shuffle'],
+                          shuffle=cfg['Eval']['loader']['shuffle'],
                           batch_size=cfg['Eval']['loader']['batch_size'],
                           num_workers=cfg['Eval']['loader']['num_workers'],
                           pin_memory=cfg['Eval']['loader']['use_shared_memory'],
