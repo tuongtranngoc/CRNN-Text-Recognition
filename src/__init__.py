@@ -6,8 +6,9 @@ from __future__ import absolute_import
 import yaml
 import os
 
+CFG_PATH = 'src/configs/rec_lmdb.yml'
 
-def load_config(file_path='src/configs/rec_lmdb.yml'):
+def load_config(file_path=CFG_PATH):
     """
     Load config from yml/yaml file.
     Args:

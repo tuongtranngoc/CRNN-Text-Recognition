@@ -35,7 +35,6 @@ class Icdar15Dataset(Dataset):
         f_dict.close()
         return dict_char2id, dict_id2char
 
-
     def load_dataset(self):
         dataset = []
         label_file_list = cfg[self.mode]['dataset']['label_file_list']
