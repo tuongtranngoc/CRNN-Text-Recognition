@@ -1,0 +1,1 @@
+from crnn import config as cfg

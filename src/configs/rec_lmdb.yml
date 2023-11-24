@@ -1,0 +1,49 @@
+Global:
+  device: cuda
+  resume_training: True
+  character_dict_path: ./datasets/icdar15/ic15_dict36.txt
+
+Optimizer:
+  lr: 0.0005
+
+Train:
+  dataset:
+    name: lmdb
+    data_dir: datasets/data_lmdb_release/training/MJ/MJ_train
+    label_file_list:
+    transforms:
+      image_shape: [3, 32, 100]
+      augmentation: True
+  
+  loader:
+    epochs: 20
+    eval_step: 1
+    shuffle: True
+    batch_size: 1028
+    num_workers: 8
+    use_shared_memory: True
+
+  checkpoint:
+    save_dir: weights
+    last_path: weights/last.pth
+    best_path: weights/best.pth
+
+Eval:
+  dataset:
+    name: lmdb
+    data_dir: datasets/data_lmdb_release/training/MJ/MJ_valid
+    label_file_list:
+    transforms:
+      image_shape: [3, 32, 100]
+      augmentation: False
+  
+  loader:
+    shuffle: False
+    batch_size: 512
+    num_workers: 4
+    use_shared_memory: False
+
+Debug:
+  transforms: debugs/transformation
+  log_file: 'logs/crnn.log'
+  tensorboard: debugs/tensorboard
