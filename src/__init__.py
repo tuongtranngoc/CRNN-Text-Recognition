@@ -6,7 +6,8 @@ from __future__ import absolute_import
 import yaml
 import os
 
-CFG_PATH = 'src/configs/rec_icdar15.yml'
+CFG_PATH = 'src/configs/rec_lmdb.yml'
+
 
 def load_config(file_path=CFG_PATH):
     """
