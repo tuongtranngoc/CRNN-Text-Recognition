@@ -55,5 +55,5 @@ python -m src.predict --img_path images/tuongan.png
 
 | Dataset | Acc| Epoch|
 |---|---|---|
-| MJSynth| 0.93 | 10 |
+| MJSynth| 0.95 | 20 |
 | Icdar2015|  |  |

@@ -11,13 +11,13 @@ from pytorch_lightning import Trainer, seed_everything
 
 from . import *
 
-from .pl_dataset import LMDBDataModule
+from .pl_dataset import ICDAR15DataModule
 from .pl_model import LitCRNN
 
 
 def main():
     model = LitCRNN()
-    data = LMDBDataModule()
+    data = ICDAR15DataModule()
     seed_everything(96, workers=True)
     
     trainer = Trainer(

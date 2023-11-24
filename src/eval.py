@@ -14,9 +14,9 @@ import argparse
 from src.models.ctc_decode import *
 from src.utils.logger import Logger
 from src.utils.losses import CTCLoss
-from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
 from src.data.dataset_lmdb import lmdb_collate_fn
+from src.utils.metrics import BatchMeter, compute_acc, map_char2id
 
 logger = Logger.get_logger("EVALUATION")
 
@@ -27,7 +27,7 @@ class Evaluation(object):
         self.model = model
         self.valid_dataset = valid_dataset
         self.loss_func = CTCLoss()
-        __, self.id2char = valid_dataset.map_char2id()
+        __, self.id2char = map_char2id()
         self.data_loader = DataLoader(self.valid_dataset,
                                       batch_size=self.args.batch_size,
                                       shuffle=self.args.shuffle,
@@ -58,7 +58,7 @@ class Evaluation(object):
                 labels = labels.cpu().detach().numpy().tolist()
                 
                 preds = best_path_decode(log_probs)
-                acc = self.compute_acc(preds, labels, labels_len)
+                acc = compute_acc(preds, labels, labels_len, self.id2char)
 
                 metrics['eval_loss'].update(loss)
                 metrics['eval_acc'].update(acc)
@@ -66,26 +66,6 @@ class Evaluation(object):
         logger.info(f'loss: {metrics["eval_loss"].get_value("mean"): .4f}, acc: {metrics["eval_acc"].get_value("mean"): .4f}')
         return metrics
     
-    def compute_acc(self, preds, labels, labels_len):
-        correct_num = 0
-        all_num = 0
-        new_labels = []
-        i = 0
-        for char_len in labels_len:
-            new_labels.append(labels[i: i+char_len])
-            i += char_len
-        for (pred), (target) in zip(preds, new_labels):
-            pred = ''.join([self.id2char[int(c)] for c in pred])
-            target = ''.join([self.id2char[int(c)] for c in target])
-            pred = pred.replace(" ", "")
-            target = target.replace(" ", "")
-            if pred == target:
-                correct_num += 1
-            all_num += 1
-        correct_num += correct_num
-        all_num += all_num
-
-        return correct_num/all_num
     
 def cli():
     parser = argparse.ArgumentParser()

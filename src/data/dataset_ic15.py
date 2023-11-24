@@ -18,22 +18,10 @@ logger = Logger.get_logger("DATASET")
 class Icdar15Dataset(Dataset):
     def __init__(self, mode='Train'):
         self.mode = mode
-        self.char2id, self.id2char = self.map_char2id()
+        self.char2id, self.id2char = map_char2id()
         self.augment = TransformCRNN()
         self.dataset = self.load_dataset()
 
-    def map_char2id(self):
-        dict_char2id = {}
-        dict_id2char = {}
-        with open(cfg['Global']['character_dict_path'],'r', encoding='utf-8') as f_dict:
-            char_list = f_dict.readlines()
-            for i, char in enumerate(char_list):
-                char = char.strip('\n')
-                if char not in dict_char2id:
-                    dict_char2id[char] = i + 1
-                    dict_id2char[i + 1] = char
-        f_dict.close()
-        return dict_char2id, dict_id2char
 
     def load_dataset(self):
         dataset = []
