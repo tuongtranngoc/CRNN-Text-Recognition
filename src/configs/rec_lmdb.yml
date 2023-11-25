@@ -47,3 +47,4 @@ Debug:
   transforms: debugs/transformation
   log_file: 'logs/crnn.log'
   tensorboard: debugs/tensorboard
+  model: 'debugs/model'
