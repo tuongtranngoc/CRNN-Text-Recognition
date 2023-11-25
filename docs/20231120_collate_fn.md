@@ -1,11 +1,11 @@
 # Everything you need to know when creating a dataloader with variable-size input using collate_fn of Pytorch
 
 ## Introduction
-By default, when we use Pytorch data loading utility `torch.utils.data.DataLoader` class:
-+ Default `collate_fn` collates a list of tuple into a single tuple of a batched image Tensor and a batched class label Tensor. In particular, the default `collate_fn` has the following properties:
-    + It always prepends a new dimension as the batch dimension.
-    + It automatically converts NumPy arrays and Python numerical values into PyTorch Tensors.
-    + It preserves the data structure, e.g., if each sample is a dictionary, it outputs a dictionary with the same set of keys but batched Tensors as values (or lists if the values can not be converted into Tensors). Same for list s, tuple s, namedtuple s, etc.
+
+Default `collate_fn` collates a list of tuple into a single tuple of a batched image Tensor and a batched class label Tensor. In particular, the default `collate_fn` has the following properties:
+  + It always prepends a new dimension as the batch dimension.
+  + It automatically converts NumPy arrays and Python numerical values into PyTorch Tensors.
+  + It preserves the data structure, e.g., if each sample is a dictionary, it outputs a dictionary with the same set of keys but batched Tensors as values (or lists if the values can not be converted into Tensors). Same for list s, tuple s, namedtuple s, etc.
 
 <p align='center'>
     <image src='/images/default_collate_fn.jpg'>
