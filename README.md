@@ -55,4 +55,4 @@ python -m src.predict --img_path images/tuongan.png
 
 | Dataset | Acc| Epoch|
 |---|---|---|
-| MJSynth| 0.95 | 20 |
+| MJSynth| 0.95 | 30 |

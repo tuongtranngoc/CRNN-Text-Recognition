@@ -64,7 +64,7 @@ class Predictor:
         labels = np.argmax(log_prob[0], axis=-1)
         labels = self.post_process(labels)
         return labels
-
+    
     def predict(self):
         with torch.no_grad():
             img = self.preprocess()
