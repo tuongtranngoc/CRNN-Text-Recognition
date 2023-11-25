@@ -11,7 +11,7 @@ Default `collate_fn` collates a list of tuple into a single tuple of a batched i
     <image src='/images/default_collate_fn.jpg'>
 </p>
 
-+ Customized `collate_fn`, users may use it to achive custom batching, e.g, collating along a dimension other than the first, padding sequences of various lengths, or adding support for data types.
+Customized `collate_fn`, users may use it to achive custom batching, e.g, collating along a dimension other than the first, padding sequences of various lengths, or adding support for data types.
 
 ## How to use `collate_fn`
 
