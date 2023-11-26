@@ -1,4 +1,4 @@
-# Everything you need to know when creating a dataloader with variable-size input using collate_fn of Pytorch
+# Everything you need to know about Pytorch's collate_fn
 
 ## Introduction
 
