@@ -31,7 +31,7 @@ class Trainer(object):
         self.create_data_loader()
         self.create_model()
         self.eval = Evaluation(self.valid_dataset, self.model)
-        
+    
     def create_data_loader(self):
         self.train_dataset = LMDBDataSet(mode='Train')
         self.valid_dataset = LMDBDataSet(mode='Eval')
@@ -41,10 +41,10 @@ class Trainer(object):
                                        num_workers=self.args.num_workers,
                                        pin_memory=self.args.pin_memory,
                                        collate_fn=lmdb_collate_fn) # Add custom collate_fn to dataloader
-        
+    
     def create_model(self):
         self.model = CRNN(num_classes=self.train_dataset.num_classes).to(self.args.device)
-        self.loss_func = CTCFacalLoss()
+        self.loss_func = CTCLoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
 
         if self.args.resume:
