@@ -14,7 +14,7 @@ class Im2Seq(nn.Module):
     def forward(self, x):
         __, __, H, ___ = x.shape
         # Mentioned in paper: It is unconstrained to the lengths of sequence-like objects,
-        # requiring only height normalization in both training and testing phases
+        # requiring only height normalization in both training and testing phases.
         assert H == 1
         x = x.squeeze(axis=2)
         x = x.permute(2, 0, 1) # NCW -> WNC before inputing to LSTM (input shape: WNC)
