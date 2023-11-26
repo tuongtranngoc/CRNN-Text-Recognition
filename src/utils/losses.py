@@ -38,3 +38,8 @@ class CTCFacalLoss(nn.Module):
         loss = torch.multiply(loss, weight)
         return loss.mean()
     
+
+class CTCCenterLoss(nn.Module):
+    def __init__(self) -> None:
+        super(CTCCenterLoss, self).__init__()
+    

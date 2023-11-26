@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 
 class HeadCRNN(nn.Module):
-    def __init__(self, in_channels, out_channels, **kwargs) -> None:
+    def __init__(self, in_channels, out_channels) -> None:
         super(HeadCRNN, self).__init__()
         self.fc = nn.Linear(in_channels, out_channels)
         self.out_channels = out_channels
