@@ -50,9 +50,18 @@ python -m src.predict --img_path images/tuongan.png
 >> tuongan
 ```
 
+## Export model
+```bash
+python -m src.exports.exporter --export <torchscript/onnx/paddle/tensorrt> --device <cuda/cpu>
+```
+
 
 ## Experiments
 
-| Dataset | Acc| Epoch|
+| Export format | Acc| inference time|
 |---|---|---|
-| MJSynth| 0.95 | 30 |
+| Pytorch | | 0.006s |
+| TorchScript | | 0.006s|
+| ONNX | | |
+| TensorRT | | |
+| Paddle | | |

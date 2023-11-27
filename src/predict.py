@@ -25,9 +25,9 @@ class Predictor:
         self.model.to(self.args.device)
         self.transform = TransformCRNN()
 
-    def preprocess(self):
-        if os.path.exists(self.args.img_path):
-            img = cv2.imread(self.args.img_path)
+    def preprocess(self, img_path):
+        if os.path.exists(img_path):
+            img = cv2.imread(img_path)
             img = self.transform.transform(img)
             img = img.unsqueeze(0)
             return img
@@ -50,7 +50,7 @@ class Predictor:
     def post_process(self, labels, blank=0):
         mapped_labels = []
         prev_label = None
-
+        
         for l in labels:
             if l != prev_label:
                 mapped_labels.append(l)
@@ -65,9 +65,9 @@ class Predictor:
         labels = self.post_process(labels)
         return labels
     
-    def predict(self):
+    def predict(self, img_path):
         with torch.no_grad():
-            img = self.preprocess()
+            img = self.preprocess(img_path)
             out = self.model(img.to(self.args.device))
             log_prob = F.log_softmax(out, dim=2)
         decoded_id = self.post_decode(log_prob)
@@ -86,6 +86,12 @@ def cli():
 
 
 if __name__ == "__main__":
+    import glob
+    import time
     args = cli()
     predictor = Predictor(args)
-    predictor.predict()
+    PATH = "datasets/icdar15/test"
+    for pth_img in glob.glob(os.path.join(PATH, "*")):
+        st = time.time()
+        predictor.predict(pth_img)
+        print(time.time()-st)

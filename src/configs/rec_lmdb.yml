@@ -1,6 +1,6 @@
 Global:
   device: cuda
-  resume_training: False
+  resume_training: True
   character_dict_path: ./datasets/icdar15/ic15_dict36.txt
 
 Optimizer:
@@ -14,9 +14,9 @@ Train:
     transforms:
       image_shape: [3, 32, 100]
       augmentation: True
-  
+
   loader:
-    epochs: 30
+    epochs: 50
     eval_step: 1
     shuffle: True
     batch_size: 1028
