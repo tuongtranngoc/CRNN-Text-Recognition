@@ -15,7 +15,7 @@ from . import *
 logger = Logger.get_logger("EXPORT")
 
 
-class ExportTool:
+class Export:
     def __init__(self, args):
         self.args = args
         __, self.id2char = map_char2id()
@@ -26,17 +26,21 @@ class ExportTool:
         self.model.eval()
     
     def export_torchscript(self):
-        f = os.path.join(os.path.dirname(self.args.model_path), os.path.basename(self.args.model_path).split('.pth')[0] + '.torchscript')
+        f = str(self.args.model_path).replace('.pth', f'.torchscript')
         logger.info(f'Starting export with torch {torch.__version__}...')
         ts = torch.jit.trace(self.model, self.sample, strict=False)
         logger.info(f'Optimizing for mobile...')
         ts.save(f)  # https://pytorch.org/tutorials/recipes/script_optimized.html
-
-        return f, None
+        return f
     
     def export_paddle(self):
-        pass
-
+        import x2paddle
+        from x2paddle.convert import pytorch2paddle
+        logger.info(f'Starting export with X2Paddle {x2paddle.__version__}...')
+        f = str(self.args.model_path).replace('.pth', f'_paddle_model{os.sep}')
+        pytorch2paddle(module=self.model, save_dir=f, jit_type='trace', input_examples=[self.sample])  # export
+        return f
+        
     def export_onnx(self):
         pass
 
@@ -56,4 +60,4 @@ def cli():
 if __name__ == "__main__":
     args = cli()
     exporter = ExportTool(args)
-    exporter.export_torchscript()
+    exporter.export_paddle()
