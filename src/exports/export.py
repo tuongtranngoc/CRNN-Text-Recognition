@@ -60,9 +60,8 @@ class Exporter:
         onnx.save(model_onnx, f)
         return f
 
-
     def export_tensorrt(self):
-        workspace = 4
+        workspace = 2
         import tensorrt as trt
         f_onnx = self.export_onnx()
         f = str(self.args.model_path).replace('.pth', f'.engine')
@@ -86,7 +85,6 @@ class Exporter:
         for out in outputs:
             logger.info(f'output "{out.name}" with shape{out.shape} {out.dtype}')
 
-        config.set_flag(trt.BuilderFlag.FP16)
         del self.model
         torch.cuda.empty_cache()
 
