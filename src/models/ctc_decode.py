@@ -8,7 +8,6 @@ import numpy as np
 def post_processing(labels, blank=0):
     mapped_labels = []
     prev_label = None
-
     for l in labels:
         if l != prev_label:
             mapped_labels.append(l)
