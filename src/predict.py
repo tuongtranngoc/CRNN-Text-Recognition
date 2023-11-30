@@ -45,7 +45,7 @@ class Predictor:
             import onnxruntime
             providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
             self.session = onnxruntime.InferenceSession(w, providers=providers)
-            self.output_names = [x.name for x in self.session.get_outputs()]
+            self.binding = self.session.io_binding()
             
         if self.args.export_format == 'tensorrt':
             logger.info("Loading model for tensorrt inference ...")
@@ -130,6 +130,7 @@ class Predictor:
             st = time.time()
             out = self.ts(img)
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
+            
         elif self.args.export_format == 'paddle':
             st = time.time()
             img = img.cpu().numpy().astype(np.float32)
@@ -137,11 +138,31 @@ class Predictor:
             self.predictor.run()
             out = [self.predictor.get_output_handle(x).copy_to_cpu() for x in self.output_names]
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
+
         elif self.args.export_format == 'onnx':
             st = time.time()
-            img = img.cpu().numpy()  # torch to numpy
-            out = self.session.run(self.output_names, {self.session.get_inputs()[0].name: img})
+            img = img.contiguous()
+            self.binding.bind_input(
+                name=self.session.get_inputs()[0].name,
+                device_type=self.args.device,
+                device_id=0,
+                element_type=np.float32,
+                shape=tuple(img.shape),
+                buffer_ptr=img.data_ptr(),
+            )
+            out_shape = [26, 1, 37]
+            out = torch.empty(out_shape, dtype=torch.float32, device='cuda:0').contiguous()
+            self.binding.bind_output(
+                name=self.session.get_outputs()[0].name,
+                device_type=self.args.device,
+                device_id=0,
+                element_type=np.float32,
+                shape=tuple(out.shape),
+                buffer_ptr=out.data_ptr(),
+            )
+            self.session.run_with_iobinding(self.binding)
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
+
         elif self.args.export_format == 'tensorrt':
             st = time.time()
             s = self.bindings['images'].shape
@@ -150,6 +171,7 @@ class Predictor:
             self.context.execute_v2(list(self.binding_addrs.values()))
             out = [self.bindings[x].data for x in sorted(self.output_names)]
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
+
         else:
             st = time.time()
             out = self.model(img)
@@ -157,8 +179,8 @@ class Predictor:
         # convert out with export format
         if isinstance(out, list):
             out = out[-1]
-            if isinstance(out, np.ndarray):
-                out = torch.tensor(out)
+        if isinstance(out, np.ndarray):
+            out = torch.tensor(out)
         log_prob = F.log_softmax(out, dim=2)
         decoded_id = self.post_decode(log_prob)
         decoded_text = ''.join([self.id2char[_id] for _id in decoded_id])
@@ -179,6 +201,6 @@ def cli():
 if __name__ == "__main__":
     args = cli()
     predictor = Predictor(args)
-    for _ in range(10):
+    for _ in range(100):
         predictor.predict(args.image_path)
     
