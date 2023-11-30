@@ -35,9 +35,14 @@ python -m src.pl_modules.pl_train
 python -m src.eval
 ```
 
+## Export model
+```bash
+python -m src.exports.exporter --export_format <torchscript/onnx/paddle/tensorrt> --device cuda
+```
+
 ## Prediction
 ```bash
-python -m src.predict --img_path <path_to_image_file>
+python -m src.predict --img_path <path_to_image_file> --export_format <torchscript/onnx/paddle/tensorrt> --device cuda
 ```
 Example:
 
@@ -46,13 +51,19 @@ Example:
 </p>
 
 ```bash
-python -m src.predict --img_path images/tuongan.png
->> tuongan
+python -m src.predict --image_path images/tuongan.png --export_format pt --device cuda
 ```
+
+
+
 
 
 ## Experiments
 
-| Dataset | Acc| Epoch|
-|---|---|---|
-| MJSynth| 0.95 | 30 |
+| Export format | inference time|
+|---|---|
+| Pytorch | 0.0008s |
+| TorchScript | 0.0007s|
+| ONNX | 0.001s|
+| TensorRT | 0.002s |
+| Paddle | 0.01s|

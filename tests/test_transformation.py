@@ -2,8 +2,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-from crnn.data.transformation import TransformCRNN
-from crnn.data.dataset_ic15 import Icdar15Dataset
+from src.data.transformation import TransformCRNN
+from src.data.dataset_ic15 import Icdar15Dataset
 
 import os
 import cv2

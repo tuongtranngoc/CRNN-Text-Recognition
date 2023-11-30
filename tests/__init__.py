@@ -1,1 +1,1 @@
-from crnn import config as cfg
+from src import config as cfg

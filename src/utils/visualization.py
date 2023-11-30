@@ -27,5 +27,5 @@ class Visualization:
                    directory=cfg['Debug']['model'],
                    graph_name='crnn')
 
-    def _vis_error_preds(cls):
+    def _vis_error_preds(cls, ):
         pass
