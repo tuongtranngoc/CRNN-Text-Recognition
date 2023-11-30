@@ -93,7 +93,6 @@ class Exporter:
         
         return f
 
-
     def __call__(self):
         logger.info("Begining export model ...")
         if self.args.export_format == 'torchscript':
