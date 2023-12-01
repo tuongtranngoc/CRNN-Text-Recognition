@@ -61,7 +61,7 @@ class Exporter:
         return f
 
     def export_tensorrt(self):
-        workspace = 2
+        workspace = 4
         import tensorrt as trt
         f_onnx = self.export_onnx()
         f = str(self.args.model_path).replace('.pth', f'.engine')
