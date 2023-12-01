@@ -168,7 +168,7 @@ traced_classifier = torch.jit.scipt(classifier)
 print(traced_ic.code)
 print(traced_classifier.code)
 ```
-
+<a name="3"></a>
 ## 3. When, How they be used?
 
 As above mentioned, TorchScript provides ease-to-use and convert a runtime engine. This allows for better performance and scalability, as the graph can be optimized and parallelized across multiple devices.
