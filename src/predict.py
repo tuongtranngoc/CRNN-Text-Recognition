@@ -40,6 +40,8 @@ class Predictor:
             self.ts.float()
 
         if self.args.export_format == 'onnx':
+            """https://onnxruntime.ai/docs/api/python/api_summary.html
+            """
             logger.info("Loading model for onnx inference...")
             w = str(self.args.model_path).split('.pth')[0] + '.onnx'
             import onnxruntime
