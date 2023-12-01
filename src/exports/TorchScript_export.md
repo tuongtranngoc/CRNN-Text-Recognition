@@ -1,7 +1,9 @@
 # Should you need to export Pytorch model with TorchScript to inference
 
+Honestly, it took me a long time to learn about TorchScript, which is a new term for me at this point. But for an implemented model to be deployed for real-world applications across various platforms and devices, you need to know features, tools and libraries.
 
-**Table of contents**
+
+## **Table of contents**
 - [1. Basics of Pytorch Model](#1)
 - [2. What is TorchScript?](#2)
 - [3. When, How they be used?](#3)
