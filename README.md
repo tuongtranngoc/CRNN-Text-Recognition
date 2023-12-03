@@ -54,10 +54,6 @@ Example:
 python -m src.predict --image_path images/tuongan.png --export_format pt --device cuda
 ```
 
-
-
-
-
 ## Experiments
 
 | Export format | inference time|

@@ -63,7 +63,7 @@ class Exporter:
         from torch2trt import torch2trt as trt
         f = str(self.args.model_path).replace('.pth', f'_engine.pth')
         logger.info(f"Starting export with tensorrt ...")
-        model_trt = trt(self.model, [self.img], fp32_mode=True)
+        model_trt = trt(self.model, [self.img], fp16_mode=True)
         torch.save(model_trt.state_dict(), f)
         return f
 

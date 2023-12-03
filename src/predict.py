@@ -162,7 +162,6 @@ class Predictor:
             out = out[-1]
         if isinstance(out, np.ndarray):
             out = torch.tensor(out)
-
         log_prob = F.log_softmax(out, dim=2)
         decoded_id = self.post_decode(log_prob)
         decoded_text = ''.join([self.id2char[_id] for _id in decoded_id])
