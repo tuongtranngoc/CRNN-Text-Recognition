@@ -9,7 +9,7 @@ Optimizer:
 Train:
   dataset:
     name: lmdb
-    data_dir: datasets/data_lmdb_release/training/MJ/MJ_train
+    data_dir: datasets/data_lmdb_release/training/ST
     label_file_list:
     transforms:
       image_shape: [3, 32, 100]
@@ -31,7 +31,7 @@ Train:
 Eval:
   dataset:
     name: lmdb
-    data_dir: datasets/data_lmdb_release/training/MJ/MJ_valid
+    data_dir: datasets/data_lmdb_release/training/MJ/IC15_2077
     label_file_list:
     transforms:
       image_shape: [3, 32, 100]
