@@ -65,5 +65,5 @@ python -m src.predict --image_path images/tuongan.png --export_format pt --devic
 | Pytorch | 0.0008s |
 | TorchScript | 0.0007s|
 | ONNX | 0.001s|
-| TensorRT | 0.002s |
+| TensorRT | 0.0001s |
 | Paddle | 0.01s|

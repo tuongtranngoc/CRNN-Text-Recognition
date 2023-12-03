@@ -50,7 +50,7 @@ class Exporter:
         self.sample = torch.randn(size=cfg['Train']['dataset']['transforms']['image_shape']).unsqueeze(0).to(self.args.device)
         self.model.to(self.args.device)
         self.model.eval()
-
+    
     def export_onnx(self):
         import onnx
         print(f'Starting export with onnx {onnx.__version__}...')

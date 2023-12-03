@@ -50,28 +50,11 @@ class Predictor:
             self.binding = self.session.io_binding()
             
         if self.args.export_format == 'tensorrt':
+            from torch2trt import TRTModule
             logger.info("Loading model for tensorrt inference ...")
-            w = str(self.args.model_path).split('.pth')[0] + '.engine'
-            import tensorrt as trt
-            from collections import OrderedDict, namedtuple
-            logger_trt = trt.Logger(trt.Logger.INFO)
-            Binding = namedtuple('Binding', ('name', 'dtype', 'shape', 'data', 'ptr'))
-            with open(w, 'rb') as f, trt.Runtime(logger_trt) as runtime:
-                model = runtime.deserialize_cuda_engine(f.read())  # read engine
-            self.context = model.create_execution_context()
-            self.bindings = OrderedDict()
-            self.output_names = []
-            
-            for i in range(model.num_bindings):
-                name = model.get_tensor_name(i)
-                dtype = trt.nptype(model.get_binding_dtype(i))
-                if not model.binding_is_input(i):
-                    self.output_names.append(name)
-                shape = tuple(self.context.get_binding_shape(i))
-                im = torch.from_numpy(np.empty(shape, dtype=dtype)).to(self.args.device)
-                self.bindings[name] = Binding(name, dtype, shape, im, int(im.data_ptr()))
-
-            self.binding_addrs = OrderedDict((n, d.ptr) for n, d in self.bindings.items())
+            w = str(self.args.model_path).split('.pth')[0] + '_engine.pth'
+            self.model_trt = TRTModule()
+            self.model_trt.load_state_dict(torch.load(w))
 
         if self.args.export_format == 'paddle':
             logger.info("Loading model for paddle to inference ...")
@@ -167,11 +150,7 @@ class Predictor:
 
         elif self.args.export_format == 'tensorrt':
             st = time.time()
-            s = self.bindings['images'].shape
-            assert img.shape == s
-            self.binding_addrs['images'] = int(img.data_ptr())
-            self.context.execute_v2(list(self.binding_addrs.values()))
-            out = [self.bindings[x].data for x in sorted(self.output_names)]
+            out = self.model_trt(img)
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
 
         else:
@@ -183,6 +162,7 @@ class Predictor:
             out = out[-1]
         if isinstance(out, np.ndarray):
             out = torch.tensor(out)
+
         log_prob = F.log_softmax(out, dim=2)
         decoded_id = self.post_decode(log_prob)
         decoded_text = ''.join([self.id2char[_id] for _id in decoded_id])
