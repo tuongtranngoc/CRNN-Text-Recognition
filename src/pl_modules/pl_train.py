@@ -30,5 +30,6 @@ def main():
     trainer.fit(model, datamodule=data)
 
 if __name__ == "__main__":
+    
     main()
         

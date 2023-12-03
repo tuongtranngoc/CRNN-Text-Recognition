@@ -7,7 +7,7 @@ torch==2.1.0
 torchvision==0.16.0 
 torchaudio==2.1.0
 pytorch-lightning==2.1.2
-orch-summary==1.4.5
+torch-summary==1.4.5
 opencv-python==4.8.1.78
 # Export models
 onnx==1.15.0
