@@ -54,7 +54,7 @@ class Predictor:
             logger.info("Loading model for tensorrt inference ...")
             w = str(self.args.model_path).split('.pth')[0] + '_engine.pth'
             self.model_trt = TRTModule()
-            self.model_trt.load_state_dict(torch.load(w))
+            self.model_trt.load_state_dict(torch.load(w, map_location=self.args.device))
 
         if self.args.export_format == 'paddle':
             logger.info("Loading model for paddle to inference ...")

@@ -26,7 +26,7 @@ class LMDBDataSet(Dataset):
         self.data_idx_order_list = self.dataset_traversal()
         self.augment = TransformCRNN()
         self.is_aug = cfg[mode]['dataset']['transforms']['augmentation']
-
+    
     def load_hierarchical_lmdb_dataset(self, data_dir):
         lmdb_sets = {}
         dataset_idx = 0

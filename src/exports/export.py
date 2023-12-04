@@ -70,6 +70,8 @@ class Exporter:
         f = str(self.args.model_path).replace('.pth', f'_engine.pth')
         logger.info(f"Starting export with tensorrt ...")
         model_trt = trt(self.model, [self.img], max_workspace_size=4)
+        del self.model
+        torch.cuda.empty_cache()
         torch.save(model_trt.state_dict(), f)
         return f
 
