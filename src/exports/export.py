@@ -25,11 +25,13 @@ class Exporter:
         self.model.eval().to(self.args.device)
     
     def export_torchscript(self):
+        """https://pytorch.org/docs/stable/jit.html
+        """
         f = str(self.args.model_path).replace('.pth', f'.torchscript')
         logger.info(f'Starting export with torch {torch.__version__}...')
         ts = torch.jit.trace(self.model, self.img, strict=False)
         logger.info(f'Optimizing for mobile...')
-        ts.save(f)  # https://pytorch.org/tutorials/recipes/script_optimized.html
+        ts.save(f)
         return f
     
     def export_paddle(self):
@@ -41,6 +43,8 @@ class Exporter:
         return f
         
     def export_onnx(self):
+        """https://onnxruntime.ai/docs/api/python/api_summary.html
+        """
         import onnx
         logger.info(f'Starting export with onnx {onnx.__version__}...')
         f = str(self.args.model_path).replace('.pth', f'.onnx')
@@ -60,10 +64,12 @@ class Exporter:
         return f
 
     def export_tensorrt(self):
+        """https://github.com/NVIDIA-AI-IOT/torch2trt
+        """
         from torch2trt import torch2trt as trt
         f = str(self.args.model_path).replace('.pth', f'_engine.pth')
         logger.info(f"Starting export with tensorrt ...")
-        model_trt = trt(self.model, [self.img], fp16_mode=True)
+        model_trt = trt(self.model, [self.img], max_workspace_size=4)
         torch.save(model_trt.state_dict(), f)
         return f
 
