@@ -52,6 +52,7 @@ Example:
 
 ```bash
 python -m src.predict --image_path images/tuongan.png --export_format pt --device cuda
+>> tuongan
 ```
 
 ## Experiments
