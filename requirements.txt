@@ -16,3 +16,4 @@ onnxruntime-gpu==1.16.3
 tensorrt==8.6.1.post1
 nvidia-pyindex==1.0.9
 x2paddle==1.4.1
+torch2trt==0.4.0
