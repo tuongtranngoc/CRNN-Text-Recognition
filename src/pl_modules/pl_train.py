@@ -19,7 +19,7 @@ def main():
     model = LitCRNN()
     data = LMDBDataModule()
     seed_everything(96, workers=True)
-    
+    torch.set_float32_matmul_precision('high')
     trainer = Trainer(
         max_epochs=30,
         check_val_every_n_epoch=1,
