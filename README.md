@@ -52,18 +52,15 @@ Example:
 
 ```bash
 python -m src.predict --image_path images/tuongan.png --export_format pt --device cuda
+>> tuongan
 ```
-
-
-
-
 
 ## Experiments
 
-| Export format | inference time|
-|---|---|
-| Pytorch | 0.0008s |
-| TorchScript | 0.0007s|
-| ONNX | 0.001s|
-| TensorRT | 0.002s |
-| Paddle | 0.01s|
+| Export format | Inference time| Accuaracy |
+|---|---|--|
+| Pytorch | 0.0008s | 95.47 |
+| TorchScript | 0.0007s| |
+| ONNX | 0.001s| |
+| TensorRT | 0.0001s | |
+| Paddle | 0.01s| |

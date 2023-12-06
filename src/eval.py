@@ -11,11 +11,14 @@ from . import config as cfg
 
 import os
 import argparse
+from tqdm import tqdm
+
+from src.models.crnn import CRNN
 from src.models.ctc_decode import *
 from src.utils.logger import Logger
 from src.utils.losses import CTCLoss
 from src.utils.torch_utils import DataUtils
-from src.data.dataset_lmdb import lmdb_collate_fn
+from src.data.dataset_lmdb import lmdb_collate_fn, LMDBDataSet
 from src.utils.metrics import BatchMeter, compute_acc, map_char2id
 
 logger = Logger.get_logger("EVALUATION")
@@ -41,7 +44,7 @@ class Evaluation(object):
             'eval_acc': BatchMeter()
         }
         self.model.eval()
-        for i, (images, labels, labels_len) in enumerate(self.data_loader):
+        for images, labels, labels_len in tqdm(self.data_loader):
             with torch.no_grad():
                 bz = images.size(0)
                 images = DataUtils.to_device(images)
@@ -69,18 +72,22 @@ class Evaluation(object):
     
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size", default=cfg['Eval']['loader']['batch_size'])
-    parser.add_argument("--shuffle", default=cfg['Eval']['loader']['shuffle'])
-    parser.add_argument("--num_workers", default=cfg['Eval']['loader']['num_workers'])
-    parser.add_argument("--pin_memory", default=cfg['Eval']['loader']['use_shared_memory'])
-    parser.add_argument("--device", default=cfg['Global']['device'])
-    parser.add_argument("--lr", default=cfg['Optimizer']['lr'])
+    parser.add_argument("--batch_size", type=int, default=cfg['Eval']['loader']['batch_size'])
+    parser.add_argument("--shuffle", type=bool, default=cfg['Eval']['loader']['shuffle'])
+    parser.add_argument("--num_workers", type=int,  default=cfg['Eval']['loader']['num_workers'])
+    parser.add_argument("--pin_memory", type=bool, default=cfg['Eval']['loader']['use_shared_memory'])
+    parser.add_argument("--device", type=str, default=cfg['Global']['device'])
+    parser.add_argument("--lr", type=float, default=cfg['Optimizer']['lr'])
+    parser.add_argument("--model_path", type=str, default=cfg['Train']['checkpoint']['best_path'])
     
     args = parser.parse_args()
     return args
-
+    
 
 if __name__ == "__main__":
     args = cli()
-    eva = Evaluation(args)
+    valid_dataset = LMDBDataSet("Eval")
+    model = CRNN(valid_dataset.num_classes).to(args.device)
+    model.load_state_dict(torch.load(args.model_path, map_location=args.device)['model'])
+    eva = Evaluation(valid_dataset, model)
     eva.evaluate()

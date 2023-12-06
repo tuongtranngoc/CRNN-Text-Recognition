@@ -44,7 +44,7 @@ class Trainer(object):
     
     def create_model(self):
         self.model = CRNN(num_classes=self.train_dataset.num_classes).to(self.args.device)
-        self.loss_func = CTCLoss()
+        self.loss_func = CTCFacalLoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
 
         if self.args.resume:

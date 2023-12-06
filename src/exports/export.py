@@ -19,18 +19,19 @@ class Exporter:
         __, self.id2char = map_char2id()
         logger.info("Creating model ...")
         self.model = CRNN(len(self.id2char)+1)
-        self.sample = torch.randn(size=cfg['Train']['dataset']['transforms']['image_shape']).unsqueeze(0).to(self.args.device)
-        logger.info(f"Creating sample with shape {self.sample.shape}")
+        self.img = torch.ones(size=cfg['Train']['dataset']['transforms']['image_shape']).unsqueeze(0).to(self.args.device)
+        logger.info(f"Creating sample with shape {self.img.shape}")
         self.model.load_state_dict(torch.load(self.args.model_path, map_location=self.args.device)['model'])
-        self.model.to(self.args.device)
-        self.model.eval()
+        self.model.eval().to(self.args.device)
     
     def export_torchscript(self):
+        """https://pytorch.org/docs/stable/jit.html
+        """
         f = str(self.args.model_path).replace('.pth', f'.torchscript')
         logger.info(f'Starting export with torch {torch.__version__}...')
-        ts = torch.jit.trace(self.model, self.sample, strict=False)
+        ts = torch.jit.trace(self.model, self.img, strict=False)
         logger.info(f'Optimizing for mobile...')
-        ts.save(f)  # https://pytorch.org/tutorials/recipes/script_optimized.html
+        ts.save(f)
         return f
     
     def export_paddle(self):
@@ -38,17 +39,19 @@ class Exporter:
         from x2paddle.convert import pytorch2paddle
         logger.info(f'Starting export with X2Paddle {x2paddle.__version__}...')
         f = str(self.args.model_path).replace('.pth', f'_paddle_model{os.sep}')
-        pytorch2paddle(module=self.model, save_dir=f, jit_type='trace', input_examples=[self.sample])
+        pytorch2paddle(module=self.model, save_dir=f, jit_type='trace', input_examples=[self.img])
         return f
         
     def export_onnx(self):
+        """https://onnxruntime.ai/docs/api/python/api_summary.html
+        """
         import onnx
         logger.info(f'Starting export with onnx {onnx.__version__}...')
         f = str(self.args.model_path).replace('.pth', f'.onnx')
         output_names = ['output0']
         torch.onnx.export(
             self.model,
-            self.sample,
+            self.img,
             f,
             verbose=False,
             do_constant_folding=True,
@@ -61,36 +64,15 @@ class Exporter:
         return f
 
     def export_tensorrt(self):
-        workspace = 4
-        import tensorrt as trt
-        f_onnx = self.export_onnx()
-        f = str(self.args.model_path).replace('.pth', f'.engine')
-        logger.info(f"Starting export with tensorrt {trt.__version__}...")
-        logger_trt = trt.Logger(trt.Logger.INFO)
-        builder = trt.Builder(logger_trt)
-        config = builder.create_builder_config()
-        config.max_workspace_size = workspace * 1 << 30
-
-        flag = (1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
-        network = builder.create_network(flag)
-        parser = trt.OnnxParser(network, logger_trt)
-        if not parser.parse_from_file(f_onnx):
-            raise RuntimeError(f'failed to load ONNX file: {f_onnx}')
-
-        inputs = [network.get_input(i) for i in range(network.num_inputs)]
-        outputs = [network.get_output(i) for i in range(network.num_outputs)]
-
-        for inp in inputs:
-            logger.info(f'input "{inp.name}" with shape{inp.shape} {inp.dtype}')
-        for out in outputs:
-            logger.info(f'output "{out.name}" with shape{out.shape} {out.dtype}')
-
+        """https://github.com/NVIDIA-AI-IOT/torch2trt
+        """
+        from torch2trt import torch2trt as trt
+        f = str(self.args.model_path).replace('.pth', f'_engine.pth')
+        logger.info(f"Starting export with tensorrt ...")
+        model_trt = trt(self.model, [self.img], max_workspace_size=4)
         del self.model
         torch.cuda.empty_cache()
-
-        with builder.build_engine(network, config) as engine, open(f, 'wb') as t:
-            t.write(engine.serialize())
-        
+        torch.save(model_trt.state_dict(), f)
         return f
 
     def __call__(self):

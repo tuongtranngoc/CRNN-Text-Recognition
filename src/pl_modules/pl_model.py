@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 
 from src.models.crnn import CRNN
 from src.models.ctc_decode import *
-from src.utils.losses import CTCLoss
+from src.utils.losses import CTCLoss, CTCFacalLoss
 
 from . import *
 
@@ -20,7 +20,7 @@ class LitCRNN(pl.LightningModule):
         self.char2id, self.id2char = map_char2id()
         self.num_classes = len(self.id2char)
         self.model = CRNN(self.num_classes)
-        self.loss_func = CTCLoss()
+        self.loss_func = CTCFacalLoss()
         self.best_acc = 0.0
         self.val_metrics = BatchMeter()
         self.train_metrics = BatchMeter()
@@ -38,7 +38,7 @@ class LitCRNN(pl.LightningModule):
         images_len = torch.tensor([outs.size(0)] * bz, dtype=torch.long)
         loss = self.loss_func(log_probs, labels, images_len, labels_len)
         self.train_metrics.update(loss)
-        self.log("Loss", self.train_metrics.get_value("mean"), prog_bar=False)
+        self.log("Loss", self.train_metrics.get_value("mean"), prog_bar=True)
         optim = self.optimizers()
         optim.zero_grad()
         self.manual_backward(loss)
@@ -62,7 +62,7 @@ class LitCRNN(pl.LightningModule):
         
     def on_validation_epoch_end(self):
         current_acc = self.val_metrics.get_value("mean")
-        self.log("Acc", current_acc, prog_bar=False)
+        self.log("Acc", current_acc, prog_bar=True)
         logger.info(f"Acc: {current_acc :.3f}")
         if current_acc > self.best_acc:
             self.best_acc = current_acc
