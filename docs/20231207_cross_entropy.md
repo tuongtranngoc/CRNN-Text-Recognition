@@ -1,13 +1,12 @@
-# Enhanced CTC losss
+# Why is there the concept of cross entropy?
 
-In OCR recognition, CRNN is a text recognition algorithm as a starting point for improving cutting-edge text recognition algorithms at the moment. CTCLoss is an indispensable part of CRNN and is used to calculate network loss. In the post, I will introduce some bag of tricks for improving CTCLoss.
-
-## 1. Focal-CTC Loss
-
-For Focal Loss, it was mainly to solve the problem of a serious imbalance in the ratio of positive and negative samples in training (imbalance between foreground and background in object detection). Starting from the cross entropy (CE) loss for binary classification:
+## Introduction
+Cross-entropy is commonly used in machine learning as a loss function. Cross-entropy is a measure from the field of information theory, building upon entropy and generally calculating the difference between two probability distributions. So how was it built?
 
 
-### 1.1. What is the Cross Entropy?
+<a name="1"></a>
+
+## What is the Cross Entropy?
 `Cross Entropy` is a measure of the difference between two probability distribution for a random variable or set of events. This concept may sound confusing, I will start with a simple theory to detail understand.
 
 As you know, rare events are more uncertain or more surprising and require more information to represent them than common events. We can calculate the amount of information there is in an event using the probability of the event. This is called `self-information` or simply the `information` and can be calculated for a discrete event x as follows:
@@ -89,7 +88,9 @@ $$H(Y, P) = -\sum_x^X Y(x)*log(P(x))$$
 
 Where $Y(x)$ is the probability of the event $x$ in $Y$, $P(x)$ is the probability of event $x$ in $P$ and $log$ is the base-2 logarithm, meaning that the results are in bits.
 
-### 1.2 Cross Entropy as a Loss Function
+<a name="2"></a>
+
+## Cross Entropy as a Loss Function
 
 Cross-entropy is widely used as a loss function when optimizing classification models with:
 
@@ -142,3 +143,8 @@ print('Average Cross Entropy: %.3f nats' % mean_ce)
 >>[y=0.0, yhat=0.3] ce: 0.357 nats
 >>Average Cross Entropy: 0.247 nats
 ```
+<a name="3"></a>
+
+## Reference
++ [what-is-information-entropy](https://machinelearningmastery.com/what-is-information-entropy/)
++ [cross-entropy-for-machine-learning](https://machinelearningmastery.com/cross-entropy-for-machine-learning/)

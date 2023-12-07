@@ -59,7 +59,7 @@ class Predictor:
         if self.args.export_format == 'paddle':
             logger.info("Loading model for paddle to inference ...")
             w = str(self.args.model_path).split('.pth')[0] + '_paddle_model'
-            import paddle.inference as pdi  # noqa
+            import paddle.inference as pdi
             w = Path(w)
             if not w.is_file():  # if not *.pdmodel
                 w = next(w.rglob('*.pdmodel'))  # get *.pdmodel file from *_paddle_model dir
@@ -123,7 +123,7 @@ class Predictor:
             self.predictor.run()
             out = [self.predictor.get_output_handle(x).copy_to_cpu() for x in self.output_names]
             logger.info(f"Runtime of {self.args.export_format}: {time.time()-st}")
-
+        
         elif self.args.export_format == 'onnx':
             st = time.time()
             img = img.contiguous()
@@ -174,7 +174,7 @@ def cli():
     parser.add_argument("--model_path", type=str, default=cfg['Train']['checkpoint']['best_path'], help="Path to model checkpoint")
     parser.add_argument("--device", type=str, default='cuda', help="device inference (cuda or cpu)")
     parser.add_argument("--export_format", type=str, default='pytorch', help="Exported format of model to inference")
-
+    
     args = parser.parse_args()
     return args
 
@@ -182,6 +182,5 @@ def cli():
 if __name__ == "__main__":
     args = cli()
     predictor = Predictor(args)
-    for _ in range(100):
-        predictor.predict(args.image_path)
+    predictor.predict(args.image_path)
     
