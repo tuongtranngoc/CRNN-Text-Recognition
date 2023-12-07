@@ -6,7 +6,7 @@ In OCR recognition, CRNN is a text recognition algorithm as a starting point for
 
 For Focal Loss, it was mainly to solve the problem of a serious imbalance in the ratio of positive and negative samples in training (imbalance between foreground and background in object detection). Starting from the cross entropy (CE) loss for binary classification:
 
-$$CE(p, y)=\left\{ \begin{array}{rcl} -log(p) &  ,y=1 \\ -log(1-p) & ,y=0 \end{array}\right.$$
+$$CE(p, y)=\left\{\begin{array}{rcl} -log(p) &  ,y=1 \\ -log(1-p) & ,y=0 \\ \end{array}\right.$$
 
 Where $y \in \lbrace \pm 1 \rbrace$ specifies the ground-truth class and $p\in \lbrack 0, 1 \rbrack$ is the model's estimated probability for the class with label $y=1$.
 
