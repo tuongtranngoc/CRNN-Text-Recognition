@@ -27,3 +27,5 @@ where $l_i$ is ground-truth label sequence and $y_i$ is the sequence preoduced b
 $$L_{FocalCTCT}=-\alpha(1-p)^{\gamma}*log(p)$$
 
 In the experiment, the value of $\gamma=2, \alpha=1$, see this for specific implementation: [losses.py](https://github.com/tuongtranngoc/CRNN-Text-Recognition/blob/main/src/utils/losses.py)
+
+## 2. A-CTC Loss
