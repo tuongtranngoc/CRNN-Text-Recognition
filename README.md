@@ -55,12 +55,22 @@ python -m src.predict --image_path images/tuongan.png --export_format pt --devic
 >> tuongan
 ```
 
+## Tensorboard
+
+```bash
+tensorboard --logdir debugs/tensorboard
+```
+
+| Train Loss | Valid Loss | Valid Acc |
+|--|--|--|
+| <p align='center'><img src="images/train_loss.jpg"></p> | <p align='center'><img src="images/eval_loss.jpg"></p> | <p align='center'><img src="images/eval_acc.jpg"></p> |
+
 ## Experiments
 
-| Export format | Inference time| Accuaracy |
-|---|---|--|
-| Pytorch | 0.0008s | 95.47 |
-| TorchScript | 0.0007s| |
-| ONNX | 0.001s| |
-| TensorRT | 0.0001s | |
-| Paddle | 0.01s| |
+| Export format | Inference time| ACC with CTCLoss| ACC with Focal CTCLoss | 
+|---|---|--|--|
+| Pytorch | 0.0008s | 95.47 | 96|
+| TorchScript | 0.0007s| - | - |
+| ONNX | 0.001s| - | - |
+| TensorRT | 0.0001s | - | - |
+| Paddle | 0.01s| - | - |

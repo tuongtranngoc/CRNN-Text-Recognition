@@ -25,8 +25,8 @@ Train:
 
   checkpoint:
     save_dir: weights
-    last_path: weights/last.pth
-    best_path: weights/best.pth
+    last_path: weights_focalctc/last.pth
+    best_path: weights_focalctc/best.pth
 
 Eval:
   dataset:
