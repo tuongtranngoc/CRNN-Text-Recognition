@@ -68,7 +68,7 @@ class Predictor:
             self.predictor = pdi.create_predictor(config)
             self.input_handle = self.predictor.get_input_handle(self.predictor.get_input_names()[0])
             self.output_names = self.predictor.get_output_names()
-
+    
     def preprocess(self, img_path):
         if os.path.exists(img_path):
             img = cv2.imread(img_path)
