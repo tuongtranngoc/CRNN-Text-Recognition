@@ -1,5 +1,6 @@
 datasets/*
 **/__pycache__/
 debugs/*
-logs/*
-weights/*
+/weights_ctc
+/weights_focalctc
+/logs
