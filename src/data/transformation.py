@@ -27,7 +27,7 @@ class TransformCRNN(object):
             A.MedianBlur(p=0.1, blur_limit=5),
             A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=20, val_shift_limit=20, p=0.3)
         ])
-
+    
     def resize_padding(self, image):
         imgC, imgH, imgW = self.image_size
         h, w, __ = image.shape

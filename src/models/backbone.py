@@ -16,7 +16,7 @@ def features_sequence_extractor():
             nn.Conv2d(64, 128, (3, 3), (1, 1), (1, 1), bias=True),
             nn.ReLU(inplace=True),
             nn.MaxPool2d((2, 2), (2, 2)),
-
+            
             nn.Conv2d(128, 256, (3, 3), (1, 1), (1, 1), bias=False),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
