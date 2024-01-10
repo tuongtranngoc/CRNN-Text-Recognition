@@ -11,7 +11,7 @@ from src.utils.logger import Logger
 from src.utils.metrics import BatchMeter
 from src.utils.torch_utils import DataUtils
 from src.utils.tensorboard import Tensorboard
-from src.utils.losses import CTCLoss, CTCFacalLoss
+from src.utils.losses import CTCLoss, CTCFacalLoss, CTCACELoss
 from src.data.dataset_lmdb import LMDBDataSet, lmdb_collate_fn
 
 from . import config as cfg
@@ -44,7 +44,7 @@ class Trainer(object):
     
     def create_model(self):
         self.model = CRNN(num_classes=self.train_dataset.num_classes).to(self.args.device)
-        self.loss_func = CTCFacalLoss()
+        self.loss_func = CTCACELoss()
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.args.lr)
 
         if self.args.resume:
@@ -67,7 +67,6 @@ class Trainer(object):
                 log_probs = F.log_softmax(out, dim=2)
                 labels_len = torch.flatten(labels_len)
                 images_len = torch.tensor([out.size(0)] * bz, dtype=torch.long)
-                
                 loss = self.loss_func(log_probs, labels, images_len, labels_len)
                 self.optimizer.zero_grad()
                 loss.backward()

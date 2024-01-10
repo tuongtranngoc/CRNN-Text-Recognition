@@ -1,7 +1,7 @@
 Global:
   device: cuda
   resume_training: True
-  character_dict_path: ./datasets/icdar15/ic15_dict36.txt
+  character_dict_path: ./datasets/dicts/ic15_dict36.txt
 
 Optimizer:
   lr: 0.0005

@@ -16,7 +16,7 @@ class Im2Seq(nn.Module):
         # Mentioned in paper: It is unconstrained to the lengths of sequence-like objects,
         # requiring only height normalization in both training and testing phases.
         # assert H == 1
-        x = x.squeeze(dim=2)
+        x = x.squeeze(dim=2) # 2D -> 1D
         x = x.permute(2, 0, 1) # NCW -> WNC before inputing to LSTM (input shape: WNC)
         return x
     

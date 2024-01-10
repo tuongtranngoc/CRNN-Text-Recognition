@@ -16,7 +16,7 @@ class CRNN(nn.Module):
         self.feat_extract = features_sequence_extractor()
         self.neck = NeckCRNN(512)
         self.head = HeadCRNN(512, num_classes)
-
+    
     def forward(self, x):
         x = self.feat_extract(x)
         x = self.neck(x)
