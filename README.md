@@ -8,6 +8,7 @@ The most typical CTC algorithm is CRNN (Convolutional Recurrent Neural Network),
 </p>
 Environment
 The dependencies are listed in `requirements.txt`. Please install and follow the command below:
+
 ```bash
 pip install -r requirements.txt
 ```
